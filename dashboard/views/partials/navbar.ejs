@@ -1,0 +1,26 @@
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">
+      <span class="logo-icon">🌟</span>
+      <span class="logo-text">Nova <span>Bot</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="/#features">المميزات</a>
+      <a href="/#commands">الأوامر</a>
+      <% if (user) { %>
+        <a href="/dashboard" class="nav-link-dash"><i class="fas fa-tachometer-alt"></i> داشبورد</a>
+        <div class="nav-user">
+          <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" alt="avatar" class="nav-avatar">
+          <span class="nav-username"><%= user.username %></span>
+          <div class="nav-dropdown">
+            <a href="/dashboard"><i class="fas fa-tachometer-alt"></i> لوحة التحكم</a>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
+          </div>
+        </div>
+      <% } else { %>
+        <a href="/auth/discord" class="btn btn-nav"><i class="fab fa-discord"></i> دخول</a>
+      <% } %>
+    </div>
+    <button class="nav-toggle" id="navToggle"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>

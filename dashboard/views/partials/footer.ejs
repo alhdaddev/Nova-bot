@@ -1,0 +1,30 @@
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">🌟 Nova Community Bot</div>
+        <p>بوت ديسكورد متكامل واحترافي لسيرفر نـوفـا كوميونتي</p>
+        <div class="footer-social">
+          <a href="#" title="Discord"><i class="fab fa-discord"></i></a>
+          <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h4>روابط سريعة</h4>
+        <a href="/">الرئيسية</a>
+        <a href="/#features">المميزات</a>
+        <a href="/dashboard">لوحة التحكم</a>
+        <a href="/auth/discord">تسجيل الدخول</a>
+      </div>
+      <div class="footer-links">
+        <h4>البوت</h4>
+        <a href="https://discord.com/oauth2/authorize?client_id=<%= process.env.CLIENT_ID %>&permissions=8&scope=bot%20applications.commands" target="_blank">إضافة البوت</a>
+        <a href="#">سيرفر الدعم</a>
+        <a href="#">سياسة الخصوصية</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© <%= new Date().getFullYear() %> Nova Community Bot — صُنع بـ ❤️ لسيرفر نـوفـا كوميونتي</p>
+    </div>
+  </div>
+</footer>
