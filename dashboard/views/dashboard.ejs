@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التحكم — Nova Bot</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body class="dash-body">
+  <%- include('partials/navbar') %>
+
+  <main class="dash-main">
+    <div class="container">
+      <div class="dash-header">
+        <h1><i class="fas fa-tachometer-alt"></i> لوحة التحكم</h1>
+        <p>اختر السيرفر الذي تريد إدارته</p>
+      </div>
+
+      <div class="guilds-grid">
+        <% guilds.forEach(guild => { %>
+        <div class="guild-card <%= guild.hasBot ? 'has-bot' : 'no-bot' %>">
+          <div class="guild-icon">
+            <% if (guild.icon) { %>
+              <img src="<%= guild.icon %>" alt="<%= guild.name %>">
+            <% } else { %>
+              <div class="guild-icon-placeholder"><%= guild.name.charAt(0) %></div>
+            <% } %>
+          </div>
+          <div class="guild-info">
+            <h3><%= guild.name %></h3>
+            <span class="guild-status <%= guild.hasBot ? 'active' : 'inactive' %>">
+              <i class="fas fa-circle"></i>
+              <%= guild.hasBot ? 'البوت موجود' : 'البوت غير مضاف' %>
+            </span>
+          </div>
+          <% if (guild.hasBot) { %>
+            <a href="/dashboard/<%= guild.id %>" class="btn btn-primary btn-sm">
+              <i class="fas fa-cog"></i> إدارة
+            </a>
+          <% } else { %>
+            <a href="https://discord.com/oauth2/authorize?client_id=<%= process.env.CLIENT_ID %>&permissions=8&scope=bot%20applications.commands&guild_id=<%= guild.id %>" target="_blank" class="btn btn-secondary btn-sm">
+              <i class="fas fa-plus"></i> إضافة
+            </a>
+          <% } %>
+        </div>
+        <% }) %>
+
+        <% if (!guilds.length) { %>
+        <div class="empty-state">
+          <div class="empty-icon">😕</div>
+          <h3>لا يوجد سيرفرات</h3>
+          <p>يبدو أنك لست مشرفاً في أي سيرفر أو لم يتم إضافة البوت بعد</p>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </main>
+
+  <%- include('partials/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>
