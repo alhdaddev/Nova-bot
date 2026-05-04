@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= guild.name %> — Nova Bot Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body class="dash-body">
+  <%- include('partials/navbar') %>
+
+  <main class="guild-main">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-guild">
+        <% if (guild.icon) { %>
+          <img src="<%= guild.icon %>" alt="<%= guild.name %>" class="sidebar-guild-icon">
+        <% } else { %>
+          <div class="sidebar-guild-placeholder"><%= guild.name.charAt(0) %></div>
+        <% } %>
+        <div>
+          <div class="sidebar-guild-name"><%= guild.name %></div>
+          <div class="sidebar-guild-members"><i class="fas fa-users"></i> <%= guild.memberCount %> عضو</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#general" class="sidebar-link active" data-section="general"><i class="fas fa-sliders-h"></i> عام</a>
+        <a href="#welcome" class="sidebar-link" data-section="welcome"><i class="fas fa-door-open"></i> ترحيب & وداع</a>
+        <a href="#moderation" class="sidebar-link" data-section="moderation"><i class="fas fa-shield-alt"></i> الإشراف</a>
+        <a href="#leveling" class="sidebar-link" data-section="leveling"><i class="fas fa-star"></i> المستويات</a>
+        <a href="#automod" class="sidebar-link" data-section="automod"><i class="fas fa-robot"></i> Automod</a>
+        <a href="#leaderboard" class="sidebar-link" data-section="leaderboard"><i class="fas fa-trophy"></i> المتصدرون</a>
+        <a href="/dashboard" class="sidebar-link sidebar-back"><i class="fas fa-arrow-right"></i> رجوع</a>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <div class="guild-content">
+      <div class="save-bar" id="saveBar">
+        <span>🔄 يوجد تغييرات غير محفوظة</span>
+        <button class="btn btn-primary btn-sm" id="saveBtn"><i class="fas fa-save"></i> حفظ التغييرات</button>
+      </div>
+
+      <!-- Toast -->
+      <div class="toast" id="toast"></div>
+
+      <!-- ─── General ─────────────────────────────────── -->
+      <section class="dash-section active" id="section-general">
+        <div class="section-title"><i class="fas fa-sliders-h"></i> الإعدادات العامة</div>
+
+        <div class="settings-grid">
+          <div class="setting-card">
+            <label class="setting-label">البريفكس (Prefix)</label>
+            <input type="text" class="setting-input" id="prefix" value="<%= config.prefix || '!' %>" maxlength="5" placeholder="!">
+            <span class="setting-hint">الحرف/الرمز الذي يبدأ به أمر البريفكس</span>
+          </div>
+          <div class="setting-card">
+            <label class="setting-label">قناة السجلات (Logs)</label>
+            <select class="setting-select" id="logChannel">
+              <option value="">— اختر قناة —</option>
+              <% guild.channels.forEach(ch => { %>
+                <option value="<%= ch.id %>" <%= config.logChannel === ch.id ? 'selected' : '' %>>#<%= ch.name %></option>
+              <% }) %>
+            </select>
+          </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-row">
+          <div class="stat-box"><i class="fas fa-users"></i><div><span class="stat-big"><%= guild.memberCount %></span><span>الأعضاء</span></div></div>
+          <div class="stat-box"><i class="fas fa-comment"></i><div><span class="stat-big"><%= guild.channels.length %></span><span>القنوات</span></div></div>
+          <div class="stat-box"><i class="fas fa-tags"></i><div><span class="stat-big"><%= guild.roles.length %></span><span>الرتب</span></div></div>
+        </div>
+      </section>
+
+      <!-- ─── Welcome ─────────────────────────────────── -->
+      <section class="dash-section" id="section-welcome">
+        <div class="section-title"><i class="fas fa-door-open"></i> نظام الترحيب والوداع</div>
+
+        <div class="settings-grid">
+          <div class="setting-card">
+            <label class="setting-label">قناة الترحيب</label>
+            <select class="setting-select" id="welcomeChannel">
+              <option value="">— معطّل —</option>
+              <% guild.channels.forEach(ch => { %>
+                <option value="<%= ch.id %>" <%= config.welcomeChannel === ch.id ? 'selected' : '' %>>#<%= ch.name %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="setting-card">
+            <label class="setting-label">قناة الوداع</label>
+            <select class="setting-select" id="leaveChannel">
+              <option value="">— معطّل —</option>
+              <% guild.channels.forEach(ch => { %>
+                <option value="<%= ch.id %>" <%= config.leaveChannel === ch.id ? 'selected' : '' %>>#<%= ch.name %></option>
+              <% }) %>
+            </select>
+          </div>
+        </div>
+
+        <div class="setting-card full">
+          <label class="setting-label">رسالة الترحيب</label>
+          <textarea class="setting-textarea" id="welcomeMessage" rows="3" placeholder="مرحباً {user} في {server}! 🎉"><%= config.welcomeMessage || 'مرحباً {user} في {server}! 🎉' %></textarea>
+          <span class="setting-hint">المتغيرات: <code>{user}</code> <code>{username}</code> <code>{server}</code> <code>{count}</code></span>
+        </div>
+
+        <div class="setting-card full">
+          <label class="setting-label">رسالة الوداع</label>
+          <textarea class="setting-textarea" id="leaveMessage" rows="3" placeholder="وداعاً {username}!"><%= config.leaveMessage || 'وداعاً {username}!' %></textarea>
+        </div>
+      </section>
+
+      <!-- ─── Moderation ──────────────────────────────── -->
+      <section class="dash-section" id="section-moderation">
+        <div class="section-title"><i class="fas fa-shield-alt"></i> إعدادات الإشراف</div>
+
+        <div class="settings-grid">
+          <div class="setting-card">
+            <label class="setting-label">الحد الأقصى للتحذيرات</label>
+            <input type="number" class="setting-input" id="maxWarnings" value="<%= config.maxWarnings || 3 %>" min="1" max="20">
+            <span class="setting-hint">الإجراء يُطبَّق عند الوصول لهذا العدد</span>
+          </div>
+          <div class="setting-card">
+            <label class="setting-label">الإجراء عند تجاوز الحد</label>
+            <select class="setting-select" id="warnAction">
+              <option value="kick" <%= config.warnAction === 'kick' ? 'selected' : '' %>>👢 طرد (Kick)</option>
+              <option value="ban" <%= config.warnAction === 'ban' ? 'selected' : '' %>>🔨 حظر (Ban)</option>
+              <option value="mute" <%= config.warnAction === 'mute' ? 'selected' : '' %>>🔇 كتم (Mute)</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Leveling ────────────────────────────────── -->
+      <section class="dash-section" id="section-leveling">
+        <div class="section-title"><i class="fas fa-star"></i> نظام المستويات</div>
+
+        <div class="toggle-card">
+          <div class="toggle-info">
+            <h4>تفعيل نظام المستويات</h4>
+            <p>يكسب الأعضاء XP عند إرسال الرسائل ويرتفعون في المستوى</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="leveling" <%= config.leveling !== false ? 'checked' : '' %>>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-card full">
+          <label class="setting-label">قناة إشعارات ترقية المستوى</label>
+          <select class="setting-select" id="levelUpChannel">
+            <option value="">— نفس قناة الرسالة —</option>
+            <% guild.channels.forEach(ch => { %>
+              <option value="<%= ch.id %>" <%= config.levelUpChannel === ch.id ? 'selected' : '' %>>#<%= ch.name %></option>
+            <% }) %>
+          </select>
+        </div>
+      </section>
+
+      <!-- ─── Automod ─────────────────────────────────── -->
+      <section class="dash-section" id="section-automod">
+        <div class="section-title"><i class="fas fa-robot"></i> الحماية التلقائية (Automod)</div>
+
+        <div class="toggle-card">
+          <div class="toggle-info">
+            <h4>🤖 تفعيل Automod</h4>
+            <p>تفعيل نظام الحماية التلقائي الشامل</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="automod" <%= config.automod ? 'checked' : '' %>>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-card">
+          <div class="toggle-info">
+            <h4>🚫 حماية من السبام</h4>
+            <p>حذف الرسائل المتكررة السريعة تلقائياً</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="antiSpam" <%= config.antiSpam ? 'checked' : '' %>>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-card">
+          <div class="toggle-info">
+            <h4>🔗 حظر روابط الدعوة</h4>
+            <p>حذف روابط Discord التي تدعو لسيرفرات أخرى</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="antiLinks" <%= config.antiLinks ? 'checked' : '' %>>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </section>
+
+      <!-- ─── Leaderboard ─────────────────────────────── -->
+      <section class="dash-section" id="section-leaderboard">
+        <div class="section-title"><i class="fas fa-trophy"></i> لوحة المتصدرين</div>
+        <div id="leaderboard-container">
+          <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <%- include('partials/footer') %>
+  <script>
+    const GUILD_ID = '<%= guild.id %>';
+  </script>
+  <script src="/js/main.js"></script>
+  <script src="/js/guild.js"></script>
+</body>
+</html>

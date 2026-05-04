@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nova Community Bot</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+      <div class="stars"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">🌟 Nova Community Bot v2.0</div>
+      <h1 class="hero-title">نـوفـا كوميونتي<br><span class="gradient-text">بوت متكامل واحترافي</span></h1>
+      <p class="hero-desc">بوت ديسكورد متكامل بنظام إشراف، مستويات، تذاكر، موسيقى، هدايا ولوحة تحكم إدارية</p>
+      <div class="hero-btns">
+        <% if (user) { %>
+          <a href="/dashboard" class="btn btn-primary"><i class="fas fa-tachometer-alt"></i> لوحة التحكم</a>
+        <% } else { %>
+          <a href="/auth/discord" class="btn btn-primary"><i class="fab fa-discord"></i> سجّل الدخول بديسكورد</a>
+        <% } %>
+        <a href="https://discord.com/oauth2/authorize?client_id=<%= process.env.CLIENT_ID %>&permissions=8&scope=bot%20applications.commands" target="_blank" class="btn btn-secondary"><i class="fas fa-robot"></i> أضف البوت</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-card">
+          <span class="stat-num" id="stat-guilds"><%= guildCount %></span>
+          <span class="stat-label">سيرفر</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" id="stat-users"><%= userCount.toLocaleString() %></span>
+          <span class="stat-label">عضو</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num" id="stat-cmds"><%= commandCount %>+</span>
+          <span class="stat-label">أمر</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="bot-card">
+        <div class="bot-card-header">
+          <div class="bot-avatar">🌟</div>
+          <div class="bot-info">
+            <span class="bot-name">Nova Bot</span>
+            <span class="bot-status"><span class="status-dot"></span> متصل</span>
+          </div>
+        </div>
+        <div class="bot-messages">
+          <div class="msg msg-cmd"><span class="msg-prefix">!</span>help</div>
+          <div class="msg msg-bot"><span class="msg-emoji">🌟</span> أهلاً! أنا نوفا، بوت نـوفـا كوميونتي</div>
+          <div class="msg msg-cmd"><span class="msg-prefix">/</span>rank</div>
+          <div class="msg msg-bot"><span class="msg-emoji">⭐</span> مستواك: <strong>Level 12</strong> — 1,840 XP</div>
+          <div class="msg msg-cmd"><span class="msg-prefix">/</span>giveaway start</div>
+          <div class="msg msg-bot"><span class="msg-emoji">🎉</span> تم إنشاء الهدية بنجاح!</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <h2>✨ مميزات البوت</h2>
+        <p>كل ما تحتاجه لسيرفرك في بوت واحد</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: linear-gradient(135deg,#FF4444,#FF6B6B)">🛡️</div>
+          <h3>نظام الإشراف</h3>
+          <p>Ban, Kick, Mute, Warn, Purge، نظام حالات إشرافية كامل مع سجل تفصيلي</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: linear-gradient(135deg,#7B2FBE,#9B59B6)">⭐</div>
+          <h3>نظام المستويات</h3>
+          <p>XP تلقائي مع ترقية المستوى، رتب المستويات، لوحة متصدرين، وبطاقة rank</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: linear-gradient(135deg,#5865F2,#7289DA)">🎫</div>
+          <h3>نظام التذاكر</h3>
+          <p>تذاكر دعم متكاملة مع تصنيفات، استلام، إغلاق، نسخ محادثة كامل</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: linear-gradient(135deg,#00D26A,#00B856)">🎉</div>
+          <h3>نظام الهدايا</h3>
+          <p>هدايا تفاعلية مع أزرار، تحديد الفائزين تلقائياً، وعدد فائزين متعدد</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: linear-gradient(135deg,#FFB800,#FFC642)">👋</div>
+          <h3>ترحيب وداع</h3>
+          <p>رسائل ترحيب ووداع احترافية مع صورة، رتب تلقائية عند الانضمام</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: linear-gradient(135deg,#FF6B35,#F7C59F)">🤖</div>
+          <h3>Automod ذكي</h3>
+          <p>حماية تلقائية ضد السبام، روابط الدعوة، والرسائل المتكررة</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: linear-gradient(135deg,#00B0D7,#0077A8)">🌐</div>
+          <h3>لوحة تحكم ويب</h3>
+          <p>لوحة تحكم إدارية متكاملة بتسجيل دخول Discord لإدارة كل الإعدادات</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: linear-gradient(135deg,#E91E8C,#C2185B)">🎵</div>
+          <h3>نظام الموسيقى</h3>
+          <p>تشغيل موسيقى من YouTube مع قائمة أغاني، تحكم كامل في الصوت</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Commands Preview -->
+  <section class="commands-preview">
+    <div class="container">
+      <div class="section-header">
+        <h2>⚡ الأوامر المتاحة</h2>
+        <p>يدعم البريفكس (<code>!</code>) وأوامر السلاش (<code>/</code>)</p>
+      </div>
+      <div class="cmd-tabs">
+        <button class="cmd-tab active" data-cat="moderation">🛡️ الإشراف</button>
+        <button class="cmd-tab" data-cat="admin">⚙️ الإدارة</button>
+        <button class="cmd-tab" data-cat="info">📊 المعلومات</button>
+        <button class="cmd-tab" data-cat="fun">🎮 الترفيه</button>
+      </div>
+      <div class="cmd-grids">
+        <div class="cmd-grid active" data-cat="moderation">
+          <% [['ban','حظر عضو'],['kick','طرد عضو'],['mute','كتم عضو مؤقتاً'],['unmute','رفع الكتم'],['warn','تحذير عضو'],['warnings','عرض التحذيرات'],['purge','حذف رسائل'],['lock','قفل قناة'],['unlock','فتح قناة'],['slowmode','الوضع البطيء']].forEach(([cmd,desc]) => { %>
+          <div class="cmd-item">
+            <span class="cmd-name">/<%= cmd %></span>
+            <span class="cmd-desc"><%= desc %></span>
+          </div>
+          <% }) %>
+        </div>
+        <div class="cmd-grid" data-cat="admin">
+          <% [['setup','إعداد البوت'],['giveaway','إدارة الهدايا'],['ticketpanel','لوحة التذاكر'],['announce','إعلان'],['autorole','رتبة تلقائية'],['levelrole','رتب المستويات'],['embed','إيمبد مخصص']].forEach(([cmd,desc]) => { %>
+          <div class="cmd-item">
+            <span class="cmd-name">/<%= cmd %></span>
+            <span class="cmd-desc"><%= desc %></span>
+          </div>
+          <% }) %>
+        </div>
+        <div class="cmd-grid" data-cat="info">
+          <% [['rank','مستواك في السيرفر'],['leaderboard','لوحة المتصدرين'],['userinfo','معلومات عضو'],['serverinfo','معلومات السيرفر'],['avatar','صورة عضو'],['ping','سرعة البوت'],['botinfo','معلومات البوت']].forEach(([cmd,desc]) => { %>
+          <div class="cmd-item">
+            <span class="cmd-name">/<%= cmd %></span>
+            <span class="cmd-desc"><%= desc %></span>
+          </div>
+          <% }) %>
+        </div>
+        <div class="cmd-grid" data-cat="fun">
+          <% [['coinflip','رمي عملة'],['8ball','الكرة السحرية'],['roll','رمي نرد'],['meme','ميم عشوائي'],['joke','نكتة'],['hug','عناق شخص'],['slap','صفعة']].forEach(([cmd,desc]) => { %>
+          <div class="cmd-item">
+            <span class="cmd-name">/<%= cmd %></span>
+            <span class="cmd-desc"><%= desc %></span>
+          </div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%- include('partials/footer') %>
+  <script src="/js/main.js"></script>
+</body>
+</html>
